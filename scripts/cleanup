@@ -1,0 +1,257 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+function sudo_keepalive {
+	sudo -v
+	while true; do
+		sudo -n true
+		sleep 60
+		kill -0 "$$" || exit
+	done 2>/dev/null &
+}
+
+function rm_if_exists {
+	file=$1
+	if [ "$(ls "${file}")" ]; then
+		echo "Removing ${file}"
+		rm -rf "${file}"
+	fi
+}
+
+function cleanup_neovim {
+	sudo_keepalive
+	declare -a neovim_config_paths=(
+		"${HOME}/.config/nvim/"
+		"${HOME}/.local/share/nvim/"
+		"${HOME}/.cache/nvim/"
+	)
+	echo "Cleaning up neovim configs..."
+	for path in "${neovim_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_git {
+	sudo_keepalive
+	declare -a git_config_paths=(
+		"${HOME}/.gitconfig"
+		"${HOME}/.gitignore"
+	)
+	echo "Cleaning up git configs..."
+	for path in "${git_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_homebrew {
+	echo "Cleaning up homebrew packages..."
+	while [[ $(brew list | wc -l) -ne 0 ]]; do
+		for EACH in $(brew list); do
+			brew uninstall --force --ignore-dependencies "$EACH"
+		done
+	done
+}
+
+function cleanup_alacritty {
+	sudo_keepalive
+	declare -a alacritty_config_paths=(
+		"${HOME}/.config/alacritty.yml"
+	)
+	echo "Cleaning up alacritty configs..."
+	for path in "${alacritty_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_asdf {
+	sudo_keepalive
+	declare -a asdf_config_paths
+	declare -a asdf_plugin_list
+
+	asdf_config_paths=(
+		"${HOME}/.tool-versions"
+	)
+	while IFS='' read -r line; do
+		asdf_plugin_list+=("$line")
+	done < <(asdf plugin list)
+	echo "Cleaning up ASDF configs..."
+	for path in "${asdf_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+	for plugin in "${asdf_plugin_list[@]}"; do
+		asdf plugin uninstall "${plugin}"
+	done
+}
+
+function cleanup_golang {
+	sudo_keepalive
+	declare -a go_bin_paths=(
+		"$GOBIN"
+		"$GOPATH/bin"
+		"$HOME/go/bin"
+		"$GOROOT/bin"
+		"$GOTOOLDIR"
+	)
+	echo "Uninstalling go packages..."
+	for path in "${go_bin_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_yabai {
+	sudo_keepalive
+	declare -a yabai_config_paths=(
+		"$HOME/.config/yabai"
+	)
+	echo "Cleaning up yabai configs..."
+	for path in "${yabai_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_skhd {
+	sudo_keepalive
+	declare -a skhd_config_paths=(
+		"$HOME/.config/skhdrc"
+	)
+	echo "Cleaning up skhd configs..."
+	for path in "${skhd_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_ssh {
+	sudo_keepalive
+	declare -a ssh_config_paths=(
+		"$HOME/.ssh"
+	)
+	echo "Cleaning up ssh configs..."
+	for path in "${ssh_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_tmux {
+	sudo_keepalive
+	declare -a tmux_config_paths=(
+		"$HOME/.tmux.conf"
+	)
+	echo "Cleaning up tmux configs..."
+	for path in "${tmux_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_fzf {
+	echo "Uninstalling fzf..."
+	~/.fzf/uninstall
+}
+
+function cleanup_zsh {
+	sudo_keepalive
+	declare -a zsh_config_paths=(
+		"$HOME/.zshrc"
+	)
+	echo "Uninstalling oh-my-zsh..."
+	for path in "${zsh_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+	uninstall_oh_my_zsh
+}
+
+function cleanup_krew {
+	sudo_keepalive
+	declare -a krew_config_paths=(
+		"$HOME/.krew"
+	)
+	echo "Uninstalling krew..."
+	for path in "${krew_config_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function cleanup_secrets {
+	sudo_keepalive
+	declare -a secrets_paths=(
+		"$HOME/.secrets"
+	)
+	echo "Ceaning up secrets..."
+	for path in "${secrets_paths[@]}"; do
+		rm_if_exists "${path}"
+	done
+}
+
+function usage {
+	echo -e $"Target not found"
+	echo -e $"\nUsage: $(basename "$0") {alacritty|asdf|fzf|git|golang|homebrew|krew|neovim|secrets|skhd|ssh|ssh|tmux|yabai|all}\n"
+	exit 1
+}
+
+function main {
+	echo "Cleaning up..."
+	case "$1" in
+	git)
+		cleanup_git
+		;;
+	homebrew)
+		cleanup_homebrew
+		;;
+	alatritty)
+		cleanup_alacritty
+		;;
+	asdf)
+		cleanup_asdf
+		;;
+	golang)
+		cleanup_golang
+		;;
+	fzf)
+		cleanup_fzf
+		;;
+	zsh)
+		cleanup_zsh
+		;;
+	yabai)
+		cleanup_yabai
+		;;
+	skhd)
+		cleanup_skhd
+		;;
+	ssh)
+		cleanup_ssh
+		;;
+	tmux)
+		cleanup_tmux
+		;;
+	secrets)
+		cleanup_secrets
+		;;
+	krew)
+		cleanup_krew
+		;;
+	neovim)
+		cleanup_neovim
+		;;
+	all)
+		cleanup_git
+		cleanup_alacritty
+		cleanup_asdf
+		cleanup_golang
+		cleanup_fzf
+		cleanup_zsh
+		cleanup_yabai
+		cleanup_skhd
+		cleanup_ssh
+		cleanup_tmux
+		cleanup_secrets
+		cleanup_krew
+		cleanup_neovim
+		cleanup_homebrew
+		;;
+	*)
+		usage
+		;;
+	esac
+}
+
+main "${1}"

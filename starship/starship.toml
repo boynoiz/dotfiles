@@ -1,0 +1,77 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+command_timeout = 10000
+
+[character]
+success_symbol = "[»](bold green)"
+error_symbol = "[»](bold red)"
+disabled = false
+
+[git_branch]
+format = " [$symbol$branch]($style) "
+symbol = "🌱 "
+style = "bold yellow"
+
+[git_status]
+conflicted = "⚔️ "
+ahead = "🏎️ 💨 ×${count} "
+behind = "🐢 ×${count} "
+diverged = "🔱 🏎️ 💨 ×${ahead_count} 🐢 ×${behind_count} "
+untracked = "🛤️  ×${count} "
+stashed = "📦 "
+modified = "📝 ×${count} "
+staged = "🗃️  ×${count} "
+renamed = "📛 ×${count} "
+deleted = "🗑️  ×${count} "
+style = "bright-white"
+format = "$all_status$ahead_behind"
+
+[directory]
+read_only = "🔒"
+truncation_length = 10
+truncate_to_repo = true
+format = "[$path]($style)[$lock_symbol]($lock_style) "
+style = "bold italic #87A752"
+
+#[hostname]
+#ssh_only = false
+#format = "[$hostname]($style)"
+#style = "bold white"
+#disabled = false
+
+[time]
+use_12hr = true
+#utc_time_offset = "-7"
+style = "#bb9af7"
+format = "🕙 $time($style) "
+disabled = false
+
+[cmd_duration]
+format = "\\[[$duration]($style)\\]"
+min_time = 1
+style = "dimmed green"
+disabled = true
+
+[kubernetes]
+format = "\\[[k8s:$context]($style)\\]"
+disabled = false
+
+[kubernetes.context_aliases]
+"arn:aws:eks:ap-southeast-1:259365498884:cluster/playground" = "boy-k8s-playground"
+
+[terraform]
+format = "\\[[tf:$workspace:$version]($style)\\]"
+
+[env_var.STARSHIP_DISTRO]
+format = "[$env_value](white)"
+variable = "STARSHIP_DISTRO"
+disabled = false
+
+[docker_context]
+format = "via [🐋 $context](blue bold)"
+
+[aws]
+format = "on [$symbol($region)]($style) "
+style = "bold blue"
+symbol = "👾 "

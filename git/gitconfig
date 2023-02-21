@@ -1,0 +1,50 @@
+[core]
+  autocrlf = input
+  editor = nvim
+  filemode = false
+  trustctime = false
+  whitespace = fix
+  excludesFile = '~/.gitignore'
+
+[include]
+  path = ~/.dotfiles/git/config.d/aliases
+[include]
+  path = ~/.dotfiles/git/config.d/delta
+[include]
+  path = ~/.dotfiles/git/config.d/theme
+[include]
+  path = ~/.dotfiles/git/config.d/lfs
+
+[push]
+  default = current
+
+[fetch]
+  prune = true
+  rebase = true
+
+[pull]
+  default = current
+  prune = true
+  rebase = true
+
+[commit]
+	gpgsign = true
+
+[init]
+  defaultBranch = main
+
+[user]
+  email = boynoiz@gmail.com
+  name = Pathompong Pechkongtong
+	signingkey = C2D8E878C6951581
+  useConfigOnly = true
+
+[gpg]
+	program = gpg
+
+[tag]
+	gpgsign = true
+
+[includeIf "gitdir:~/Projects/terraform"]
+  [user]
+    email = boynoiz@gmail.com

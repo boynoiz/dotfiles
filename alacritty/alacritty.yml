@@ -1,0 +1,37 @@
+---
+window:
+  dimensions:
+    columns: 0
+    lines: 0
+  dynamic_padding: false
+  decorations: full
+  startup_mode: Windowed
+scrolling:
+  history: 10000
+  multiplier: 3
+font:
+  normal:
+    family: GoMono Nerd Font Mono
+    style: Regular
+  size: 18
+  hinting: true
+  AppleFontSmoothing: user
+mouse:
+  hints:
+    launcher:
+      program: open
+    modifiers: Shift
+bell:
+  animation: EaseOutExpo
+  duration: 10
+  color: "0x000000"
+selection:
+  semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
+  save_to_clipboard: true
+cursor:
+  style: Block
+  unfocused_hollow: true
+live_config_reload: true
+import:
+  - "~/.dotfiles/alacritty/keybindings.yml"
+  - "~/.dotfiles/alacritty/colors.yml"

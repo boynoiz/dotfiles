@@ -1,0 +1,286 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+function sudo_keepalive {
+	sudo -v
+	while true; do
+		sudo -n true
+		sleep 60
+		kill -0 "$$" || exit
+	done 2>/dev/null &
+}
+
+function rm_if_exists {
+	file=$1
+	if [ "$(ls "${file}")" ]; then
+		echo "Removing ${file}"
+		rm -rf "${file}"
+	fi
+}
+
+function symlink {
+	target=$1
+	link_name=$2
+	ln -s "${HOME}/.dotfiles/${target}" "${link_name}"
+	ls -lhart "${link_name}"
+}
+
+function pacman {
+	sudo pacman-mirrors --country Thailand,Taiwan,Singapore,Japan
+	sudo pacman -Syu
+	sudo pacman -S --needed \
+		git \
+		base-devel \
+		yay \
+		openssl \
+		zlib \
+		bzip2 \
+		readline \
+		sqlite \
+		curl \
+		llvm \
+		ncurses \
+		xz \
+		tk \
+		libffi \
+		python-pyopenssl
+	yay -Y --gendb
+	echo y | yay -S ttf-anonymouspro-nerd \
+		ttf-dejavu-nerd \
+		ttf-firacode-nerd \
+		ttf-go-nerd \
+		ttf-hack-nerd \
+		ttf-inconsolata-nerd \
+		ttf-jetbrains-mono-nerd
+}
+
+function setup_git {
+	sudo_keepalive
+	echo "Setting up git..."
+	rm_if_exists "${HOME}/.gitconfig"
+	rm_if_exists "${HOME}/.gitignore"
+	symlink "git/gitignore" "${HOME}/.gitignore"
+	symlink "git/gitconfig" "${HOME}/.gitconfig"
+}
+
+function setup_homebrew {
+	sudo_keepalive
+	echo "Setting up homebrew..."
+	if test ! "$(which brew)"; then
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	fi
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	brew update
+	brew bundle install \
+		--verbose --file=Brewfile
+	brew cleanup
+	[ ! -f "$(brew --prefix)/bin/knamespace" ] || sudo mv "$(brew --prefix)/bin/kubens" /usr/local/bin/knamespace
+	[ ! -f "$(brew --prefix)/bin/kcontext" ] || sudo mv "$(brew --prefix)/bin/kubectx" /usr/local/bin/kcontext
+}
+
+function setup_alacritty {
+	sudo_keepalive
+	alacritty_path="${HOME}/.config/alacritty.yml"
+	echo "Setting up alacritty..."
+	rm_if_exists "${alacritty_path}"
+	symlink "alacritty/alacritty.yml" "${alacritty_path}"
+}
+
+function setup_asdf {
+	sudo_keepalive
+	echo "Setting up ASDF..."
+	declare -a plugins_list=(
+		"cilium-cli"
+		"argocd"
+		"cilium-hubble"
+		"direnv"
+		"dotnet-core"
+		"linkerd"
+		"istioctl"
+		"kubectl"
+		"kubectx"
+		"helm"
+		"terraform"
+		"golang"
+		"rust"
+		"nodejs"
+		"python"
+	)
+	echo "Installing ASDF plugins..."
+	for plugin in "${plugins_list[@]}"; do
+		check="$(brew --prefix)/bin/asdf which ${plugin}"
+		if [ "${check}" ]; then
+			echo "${plugin} asdf plugin already installed, skipping..."
+		else
+			"$(brew --prefix)/bin/asdf plugin add ${plugin}"
+		fi
+	done
+	asdf direnv setup --shell fish --version latest
+	rm_if_exists "${HOME}/.tool-versions"
+	symlink "asdf/tool-versions" "${HOME}/.tool-versions"
+	cd "${HOME}"
+	$(brew --prefix)/bin/asdf install
+	cd "${HOME}/.dotfiles"
+}
+
+function setup_golang {
+	sudo_keepalive
+	echo "Setting up go..."
+	declare -a go_package_list=(
+		"github.com/golang/mock/mockgen@v1.6.0"
+	)
+	echo "Installing go packages..."
+	for go_package in "${go_package_list[@]}"; do
+		"${HOME}/.asdf/shims/go" install "${go_package}"
+	done
+}
+
+function setup_ssh {
+	sudo_keepalive
+	echo "Setting up ssh..."
+	ssh_path="${HOME}/.ssh"
+	mkdir -p "${ssh_path}"
+	rm_if_exists "${ssh_path}/config"
+	symlink "ssh/config" "${ssh_path}/config"
+}
+
+function setup_tmux {
+	sudo_keepalive
+	echo "Setting up tmux..."
+	rm_if_exists "${HOME}/.tmux.conf"
+	symlink "tmux/tmux.conf" "${HOME}/.tmux.conf"
+}
+
+function setup_neovim {
+	sudo_keepalive
+	echo "Setting up neovim..."
+	neovim_path="${HOME}/.config/nvim"
+	mkdir -p "${neovim_path}/lua"
+	# git clone -b "v2.0" https://github.com/NvChad/NvChad "${neovim_path}" --depth 1
+	# symlink "nvchad/custom/" "${neovim_path}/lua/custom"
+	symlink "nvim/lua/config" "${neovim_path}/lua/config"
+	symlink "nvim/lua/plugins" "${neovim_path}/lua/plugins"
+	symlink "nvim/.neoconf.json" "${neovim_path}/.neoconf.json"
+	symlink "nvim/init.lua" "${neovim_path}/init.lua"
+	symlink "nvim/stylua.toml" "${neovim_path}/stylua.toml"
+	sleep 1
+	nvim
+}
+
+function setup_fzf {
+	git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+	~/.fzf/install
+}
+
+function setup_fish {
+	sudo_keepalive
+	echo "Setting up fish shell config..."
+	rm_if_exists "${HOME}/.config/fish/config.fish"
+	rm_if_exists "${HOME}/.config/fish/alias.fish"
+	mkdir -p ${HOME}/.config/fish/functions
+	symlink "fish/config.fish" "${HOME}/.config/fish/config.fish"
+	symlink "fish/alias.fish" "${HOME}/.config/fish/alias.fish"
+	symlink "fish/functions/fish_ssh_agent.fish" "${HOME}/.config/fish/functions/fish_ssh_agent.fish"
+	echo "$(brew --prefix)/bin/fish" | sudo tee -a /etc/shells
+	chsh -s $(brew --prefix)/bin/fish $USER
+	# install fisher
+	curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
+	# install plugin
+	fisher install jorgebucaran/nvm.fish
+	fisher install IlanCosman/tide@v5
+	fisher install jhillyerd/plugin-git
+	fisher install edc/bass
+}
+
+function setup_krew {
+	set -x
+	OS="$(uname | tr '[:upper:]' '[:lower:]')"
+	ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')"
+	KREW="krew-${OS}_${ARCH}"
+	cd "$(mktemp -d)"
+	curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz"
+	tar zxvf "${KREW}.tar.gz"
+	./"${KREW}" install krew
+
+	kubectl krew install ice
+	kubectl krew install ingress-nginx
+	kubectl krew install cert-manager
+	kubectl krew install kyverno
+}
+
+function setup_secrets {
+	sudo_keepalive
+	echo "Setting up secret stubs..."
+	touch "${HOME}/.secrets"
+}
+
+function main {
+	echo "Setting up dotfiles..."
+	case "$1" in
+	git)
+		setup_git
+		;;
+	homebrew)
+		setup_homebrew
+		;;
+	alacritty)
+		setup_alacritty
+		;;
+	asdf)
+		setup_asdf
+		;;
+	golang)
+		setup_golang
+		;;
+	fzf)
+		setup_fzf
+		;;
+	fish)
+		setup_fish
+		;;
+	yabai)
+		setup_yabai
+		;;
+	skhd)
+		setup_skhd
+		;;
+	ssh)
+		setup_ssh
+		;;
+	tmux)
+		setup_tmux
+		;;
+	secrets)
+		setup_secrets
+		;;
+	krew)
+		setup_krew
+		;;
+	neovim)
+		setup_neovim
+		;;
+	all)
+		setup_git
+		setup_homebrew
+		setup_fish
+		setup_asdf
+		setup_alacritty
+		setup_golang
+		setup_fzf
+		setup_yabai
+		setup_skhd
+		setup_ssh
+		setup_tmux
+		setup_secrets
+		setup_krew
+		setup_neovim
+		;;
+	*)
+		echo -e $"Target not found"
+		echo -e $"\nUsage: $(basename "$0") {alacritty|asdf|fzf|git|golang|homebrew|krew|macos|neovim|secrets|skhd|ssh|ssh|tmux|yabai|all}\n"
+		exit 1
+		;;
+	esac
+}
+
+main "${1}"

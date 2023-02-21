@@ -1,0 +1,6 @@
+[alias]
+  a = add --all
+  c = commit
+  d = diff
+  s = status -b
+  l = log
