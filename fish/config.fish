@@ -26,6 +26,11 @@ fish_ssh_agent
 # set alias
 . ~/.config/fish/alias.fish
 
+# Jetbrains App
+if test -d $HOME/.local/share/JetBrains/Toolbox/scripts
+    set -gx PATH $HOME/.local/share/JetBrains/Toolbox/scripts $PATH
+end
+
 # asdf
 source (brew --prefix asdf)/libexec/asdf.fish
 
