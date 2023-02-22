@@ -40,7 +40,7 @@
   useConfigOnly = true
 
 [gpg]
-	program = gpg
+	program = ~/.dotfiles/bin/gpg2-display-aware
 
 [tag]
 	gpgsign = true
