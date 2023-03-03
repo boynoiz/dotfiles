@@ -1,0 +1,1 @@
+post_rust_cargo = ${HOME}/.dotfiles/asdf/post_cargo_install_hook ${@}

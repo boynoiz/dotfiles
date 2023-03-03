@@ -32,7 +32,9 @@ if test -d $HOME/.local/share/JetBrains/Toolbox/scripts
 end
 
 # asdf
-source (brew --prefix asdf)/libexec/asdf.fish
+if test -f (brew --prefix asdf)/libexec/asdf.fish
+    source (brew --prefix asdf)/libexec/asdf.fish
+end
 
 if test -d (brew --prefix)"/share/fish/completions"
     set -gx fish_complete_path $fish_complete_path (brew --prefix)/share/fish/completions
