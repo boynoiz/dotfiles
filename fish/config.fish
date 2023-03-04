@@ -73,3 +73,13 @@ end
 if type -q zoxide
     zoxide init fish | source
 end
+
+# VsCode
+if type -q code
+  set -gx DONT_PROMPT_WSL_INSTALL 1
+end
+
+# Tmux Plugin Manager
+if test -d "$HOME/.tmux/plugins/"
+  set -gx TMUX_PLUGIN_MANAGER_PATH "$HOME/.tmux/plugins/"
+end
