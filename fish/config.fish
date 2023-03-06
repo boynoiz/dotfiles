@@ -16,8 +16,14 @@ set LANGUAGE en_US.UTF-8
 set LC_ALL en_US.UTF-8
 set LC_MESSAGES en_US.UTF-8
 
-# git GPG Key
+# Git GPG Key
 set -gx GPG_TTY (tty)
+
+# Windows X-Server
+set -gx GDK_SCALE 0
+set -gx GDK_BACKEND x11
+set -gx LIBGL_ALWAYS_INDIRECT 1
+set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 
 # SSH Agent
 # https://github.com/ivakyb/fish_ssh_agent
@@ -46,9 +52,6 @@ end
 
 # Kruw
 set -gx PATH $PATH $HOME/.krew/bin
-
-# Windows X-Server
-set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 
 # Golang
 set -gx GOPATH (go env GOPATH)
@@ -82,4 +85,9 @@ end
 # Tmux Plugin Manager
 if test -d "$HOME/.tmux/plugins/"
   set -gx TMUX_PLUGIN_MANAGER_PATH "$HOME/.tmux/plugins/"
+end
+
+# k3d
+if type -q k3d
+  k3d completion fish | source
 end

@@ -40,7 +40,7 @@
   useConfigOnly = true
 
 [gpg]
-	program = /usr/local/bin/gpg2-display-aware
+	program = "/usr/bin/gpg2"
 
 [tag]
 	gpgsign = true
