@@ -50,6 +50,16 @@ if test -d (brew --prefix)"/share/fish/vendor_completions.d"
     set -gx fish_complete_path $fish_complete_path (brew --prefix)/share/fish/vendor_completions.d
 end
 
+# SurrealDB
+if type -q "$HOME/.surrealdb/surreal"
+  set -gx PATH $PATH $HOME/.surrealdb
+end
+
+# Tiup
+if test -d "$HOME/.tiup/bin"
+  set -gx PATH $PATH $HOME/.tiup/bin
+end
+
 # Kruw
 set -gx PATH $PATH $HOME/.krew/bin
 
@@ -60,21 +70,23 @@ set -gx GOBIN (go env GOBIN)
 set -gx PATH $PATH $GOPATH/bin $GOROOT/bin $GOBIN
 
 # Rust
-set -gx PATH $PATH $HOME/.cargo/bin
+if test -d "$HOME/.cargo/bin"
+  set -gx PATH $PATH $HOME/.cargo/bin
+end
 
 # Starship
 if type -q starship
-    starship init fish | source
+  starship init fish | source
 end
 
 # The Fuck
 if type -q thefuck
-    thefuck --alias | source
+  thefuck --alias | source
 end
 
 # Zoxide
 if type -q zoxide
-    zoxide init fish | source
+  zoxide init fish | source
 end
 
 # VsCode
