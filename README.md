@@ -2,14 +2,10 @@
 
 ## Overview
 
-This repo holds my dotfiles for Manjaro (Arch Linux).
-Credit the original source from [lucazz/dotfiles](https://github.com/lucazz/dotfiles)
+This repo holds my dotfiles for Manjaro (Arch Linux) WSL2.
 
-## Using this repo
 
-```bash
-xcode-select --install
-git clone --recursive https://github.com/boynoiz/dotfiles.git ~/.dotfiles
-cd .dotfiles
-make bootstrap
-```
+# Credit
+- Base structure and shell script file from [lucazz/dotfiles](https://github.com/lucazz/dotfiles)
+- Fish shell functions from [paulirish/dotfiles](https://github.com/paulirish/dotfiles)
+- Python and pyenv for fish shell [yujinyuz/dotfiles](https://github.com/yujinyuz/dotfiles)

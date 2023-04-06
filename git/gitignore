@@ -24,3 +24,8 @@
 .VolumeIcon.icns
 ehthumbs.db
 Thumbs.db
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

@@ -45,6 +45,8 @@
 [tag]
 	gpgsign = true
 
-[includeIf "gitdir:~/Projects/terraform"]
-  [user]
-    email = boynoiz@gmail.com
+[includeIf "gitdir:~/Projects/**"]
+  path=~/.dotfiles/git/personal-gitconfig
+
+[includeIf "gitdir:~/Sellsuki/**"]
+  path=~/.dotfiles/git/work-gitconfig

@@ -16,6 +16,7 @@ set LANGUAGE en_US.UTF-8
 set LC_ALL en_US.UTF-8
 set LC_MESSAGES en_US.UTF-8
 
+
 # Git GPG Key
 set -gx GPG_TTY (tty)
 
@@ -25,16 +26,18 @@ set -gx GDK_BACKEND x11
 set -gx LIBGL_ALWAYS_INDIRECT 1
 set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 
-# SSH Agent
-# https://github.com/ivakyb/fish_ssh_agent
-fish_ssh_agent
+# Fish shell autocompletions
+if test -d (brew --prefix)"/share/fish/completions"
+    set -gx fish_complete_path $fish_complete_path (brew --prefix)/share/fish/completions
+end
 
-# set alias
-. ~/.config/fish/alias.fish
+if test -d (brew --prefix)"/share/fish/vendor_completions.d"
+    set -gx fish_complete_path $fish_complete_path (brew --prefix)/share/fish/vendor_completions.d
+end
 
-# Jetbrains App
-if test -d $HOME"/.local/share/JetBrains/Toolbox/scripts"
-    set -gx PATH $HOME/.local/share/JetBrains/Toolbox/scripts $PATH
+# Fish addition functions
+if test -d $HOME/.dotfiles/fish/functions
+  set -gx fish_function_path $fish_function_path "$HOME/.dotfiles/fish/functions"
 end
 
 # asdf
@@ -42,12 +45,14 @@ if test -f (brew --prefix asdf)"/libexec/asdf.fish"
     source (brew --prefix asdf)/libexec/asdf.fish
 end
 
-if test -d (brew --prefix)"/share/fish/completions"
-    set -gx fish_complete_path $fish_complete_path (brew --prefix)/share/fish/completions
+# Jetbrains App
+if test -d $HOME"/.local/share/JetBrains/Toolbox/scripts"
+    set -gx PATH $HOME/.local/share/JetBrains/Toolbox/scripts $PATH
 end
 
-if test -d (brew --prefix)"/share/fish/vendor_completions.d"
-    set -gx fish_complete_path $fish_complete_path (brew --prefix)/share/fish/vendor_completions.d
+# PyENV
+if type -q python
+  set -gx PYTHON_BUILD_ARIA2_OPTS "-x 10 -k 1M"
 end
 
 # SurrealDB
@@ -61,13 +66,17 @@ if test -d "$HOME/.tiup/bin"
 end
 
 # Kruw
-set -gx PATH $PATH $HOME/.krew/bin
+if test -d "$HOME/.krew"
+  set -gx PATH $PATH $HOME/.krew/bin
+end
 
 # Golang
-set -gx GOPATH (go env GOPATH)
-set -gx GOROOT (go env GOROOT)
-set -gx GOBIN (go env GOBIN)
-set -gx PATH $PATH $GOPATH/bin $GOROOT/bin $GOBIN
+if type -q go
+  set -gx GOPATH (go env GOPATH)
+  set -gx GOROOT (go env GOROOT)
+  set -gx GOBIN (go env GOBIN)
+  set -gx PATH $PATH $GOPATH/bin $GOROOT/bin $GOBIN
+end
 
 # Rust
 if test -d "$HOME/.cargo/bin"
@@ -86,7 +95,8 @@ end
 
 # Zoxide
 if type -q zoxide
-  zoxide init fish | source
+  set -gx _ZO_ECHO 1
+  zoxide init --cmd cd --hook pwd fish | source
 end
 
 # VsCode
@@ -102,4 +112,14 @@ end
 # k3d
 if type -q k3d
   k3d completion fish | source
+end
+
+# mcfly
+if type -q mcfly
+  mcfly init fish | source
+end
+
+# set alias
+if test -f $HOME/.dotfiles/fish/alias.fish
+  source $HOME/.dotfiles/fish/alias.fish
 end
