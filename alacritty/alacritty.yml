@@ -3,17 +3,27 @@ window:
   dimensions:
     columns: 0
     lines: 0
+  position:
+    x: 0
+    y: 0
+  padding:
+    x: 10
+    y: 10
   dynamic_padding: false
   decorations: full
   startup_mode: Windowed
 scrolling:
   history: 10000
   multiplier: 3
+shell:
+  program: /bin/fish
+  args:
+    - --login
 font:
   normal:
-    family: GoMono Nerd Font Mono
+    family: CaskaydiaCove Nerd Font Mono
     style: Regular
-  size: 18
+  size: 10
   hinting: true
   AppleFontSmoothing: user
 mouse:
@@ -29,7 +39,9 @@ selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
   save_to_clipboard: true
 cursor:
-  style: Block
+  style:
+    shape: Block
+    blinking: Always
   unfocused_hollow: true
 live_config_reload: true
 import:
