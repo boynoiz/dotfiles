@@ -1,6 +1,16 @@
 #set PATH
 set PATH $HOME/bin $HOME/.local/bin /usr/local/bin /usr/share $PATH
 
+# Fish addition functions
+if test -d $HOME/.dotfiles/fish/functions
+  set -gx fish_function_path $fish_function_path "$HOME/.dotfiles/fish/functions"
+end
+
+# Fish shell autocompletions
+if test -d $HOME/.dotfiles/fish/completions
+  set -gx fish_complete_path $fish_function_path "$HOME/.dotfiles/fish/completions"
+end
+
 # Homebrew
 if test -d /home/linuxbrew/.linuxbrew
     eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
@@ -11,29 +21,22 @@ if test -d /home/linuxbrew/.linuxbrew
 end
 
 #encoding
-set LANG en_US.UTF-8
-set LANGUAGE en_US.UTF-8
-set LC_ALL en_US.UTF-8
-set LC_MESSAGES en_US.UTF-8
+set -gx LANG en_US.UTF-8
+set -gx LANGUAGE en_US.UTF-8
+set -gx LC_ALL en_US.UTF-8
+set -gx LC_MESSAGES en_US.UTF-8
 
 
 # Git GPG Key
 set -gx GPG_TTY (tty)
 
 # Windows X-Server
-#set -gx GDK_SCALE 0
-#set -gx GDK_BACKEND x11
-#set -gx LIBGL_ALWAYS_INDIRECT 1
-#set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
-
-# Fish addition functions
-if test -d $HOME/.dotfiles/fish/functions
-  set -gx fish_function_path $fish_function_path "$HOME/.dotfiles/fish/functions"
-end
-
-# Fish shell autocompletions
-if test -d $HOME/.dotfiles/fish/completions
-  set -gx fish_complete_path $fish_function_path "$HOME/.dotfiles/fish/completions"
+set check_os (uname -r | sed -n 's/.*\( *microsoft *\).*/\1/pi')
+if string match -riq 'microsoft' $check_os
+  set -gx GDK_SCALE 0
+  set -gx GDK_BACKEND x11
+  set -gx LIBGL_ALWAYS_INDIRECT 1
+  set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 end
 
 # asdf

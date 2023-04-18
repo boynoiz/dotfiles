@@ -28,7 +28,7 @@
   rebase = true
 
 [commit]
-	gpgsign = true
+  gpgsign = true
 
 [init]
   defaultBranch = main
@@ -40,10 +40,10 @@
   useConfigOnly = true
 
 [gpg]
-	program = "/usr/bin/gpg2"
+  program = "/usr/bin/gpg"
 
 [tag]
-	gpgsign = true
+  gpgsign = true
 
 [includeIf "gitdir:~/Projects/**"]
   path=~/.dotfiles/git/personal-gitconfig
