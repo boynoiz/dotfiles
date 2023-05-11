@@ -41,12 +41,12 @@ end
 
 # asdf
 if test -f (brew --prefix asdf)"/libexec/asdf.fish"
-    source (brew --prefix asdf)/libexec/asdf.fish
+  source (brew --prefix asdf)/libexec/asdf.fish
 end
 
 # Jetbrains App
 if test -d $HOME"/.local/share/JetBrains/Toolbox/scripts"
-    set -gx PATH $HOME/.local/share/JetBrains/Toolbox/scripts $PATH
+  set -gx PATH $HOME/.local/share/JetBrains/Toolbox/scripts $PATH
 end
 
 # PyENV
