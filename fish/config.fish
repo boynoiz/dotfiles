@@ -108,6 +108,10 @@ if type -q mcfly
   mcfly init fish | source
 end
 
+if type -q yq
+  yq shell-completion fish | source
+end
+
 # set alias
 if test -f $HOME/.dotfiles/fish/alias.fish
   source $HOME/.dotfiles/fish/alias.fish

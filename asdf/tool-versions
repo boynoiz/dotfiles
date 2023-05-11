@@ -1,6 +1,6 @@
 helm 3.11.1
 golang 1.19.6
-terraform 1.4.2
+terraform 1.4.6
 nodejs 19.6.1
 linkerd 2.12.4
 rust 1.67.1

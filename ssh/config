@@ -1,3 +1,5 @@
+Include /home/pattp/.colima/ssh_config
+
 HashKnownHosts yes
 AddKeysToAgent yes
 
