@@ -1,10 +1,10 @@
 helm 3.11.1
 golang 1.19.6
-terraform 1.4.6
+terraform 1.5.3
 nodejs 19.6.1
 linkerd 2.12.4
 rust 1.67.1
-python 3.11.3
+python 3.11.4
 kubectl 1.23.16
 kubectx 0.9.4
 teleport-community 9.3.26
@@ -15,3 +15,5 @@ nerdctl 1.2.1
 terraformer 0.8.22
 zola 0.17.2
 shfmt lastest
+cilium-cli 0.15.4
+php 8.2.7

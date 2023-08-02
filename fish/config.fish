@@ -39,6 +39,12 @@ if string match -riq 'microsoft' $check_os
   set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 end
 
+# If micro editor exist
+if type -q micro
+ set -gx KUBE_EDITOR micro
+ set -gx TALOS_EDITOR micro
+end
+
 # asdf
 if test -f (brew --prefix asdf)"/libexec/asdf.fish"
   source (brew --prefix asdf)/libexec/asdf.fish
@@ -84,8 +90,7 @@ end
 
 # Zoxide
 if type -q zoxide
-  set -gx _ZO_ECHO 1
-  zoxide init --cmd cd --hook pwd fish | source
+    zoxide init fish | source
 end
 
 # VsCode
