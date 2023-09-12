@@ -1,23 +1,21 @@
 #set PATH
 set PATH $HOME/bin $HOME/.local/bin /usr/local/bin /usr/share $PATH
 
-# Fish addition functions
-if test -d $HOME/.dotfiles/fish/functions
-  set -gx fish_function_path $fish_function_path "$HOME/.dotfiles/fish/functions"
-end
-
-# Fish shell autocompletions
-if test -d $HOME/.dotfiles/fish/completions
-  set -gx fish_complete_path $fish_function_path "$HOME/.dotfiles/fish/completions"
-end
-
 # Homebrew
-if test -d /home/linuxbrew/.linuxbrew
-    eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-    #set -gx LD_LIBRARY_PATH /usr/lib (brew --prefix)/lib $LD_LIBRARY_PATH
-    #set -gx LDFLAGS "-L/home/linuxbrew/.linuxbrew/opt/openssl@3/lib" $LDFLAGS
-    #set -gx CPPFLAGS "-I/home/linuxbrew/.linuxbrew/opt/openssl@3/include" $CPPFLAGS
-    #set -gx PKG_CONFIG_PATH "/home/linuxbrew/.linuxbrew/opt/openssl@3/lib/pkgconfig" $PKG_CONFIG_PATH
+if type -q /home/linuxbrew/.linuxbrew/bin/brew
+  set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
+  eval ($HOMEBREW_PREFIX/bin/brew shellenv)
+  if test -d "$HOMEBREW_PREFIX/share/fish/completions"
+    set -gx fish_complete_path $fish_complete_path $HOMEBREW_PREFIX/share/fish/completions
+  end
+  if test -d $HOMEBREW_PREFIX/share/fish/vendor_completions.d
+    set -gx fish_complete_path $fish_complete_path $HOMEBREW_PREFIX/share/fish/vendor_completions.d
+  end
+
+  #set -gx LD_LIBRARY_PATH /usr/lib (brew --prefix)/lib $LD_LIBRARY_PATH
+  #set -gx LDFLAGS "-L $HOMEBREW_PREFIX/opt/openssl@3/lib" $LDFLAGS
+  #set -gx CPPFLAGS "-I $HOMEBREW_PREFIX/opt/openssl@3/include" $CPPFLAGS
+  #set -gx PKG_CONFIG_PATH "$HOMEBREW_PREFIX/opt/openssl@3/lib/pkgconfig" $PKG_CONFIG_PATH
 end
 
 #encoding
@@ -26,17 +24,18 @@ set -gx LANGUAGE en_US.UTF-8
 set -gx LC_ALL en_US.UTF-8
 set -gx LC_MESSAGES en_US.UTF-8
 
-
 # Git GPG Key
 set -gx GPG_TTY (tty)
 
 # Windows X-Server
 set check_os (uname -r | sed -n 's/.*\( *microsoft *\).*/\1/pi')
 if string match -riq 'microsoft' $check_os
+  set -gx PATH /c/Windows/System32/ $PATH
   set -gx GDK_SCALE 0
   set -gx GDK_BACKEND x11
   set -gx LIBGL_ALWAYS_INDIRECT 1
-  set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
+  #set -gx WSL_HOST_IP (cmd.exe /C netsh interface ip show addresses "vEthernet (WSL)" | grep "IP Address" | sed -e "s/\sIP Address:\s//g; s/\r//")
+  set -gx DISPLAY 172.20.144.1:0.0
 end
 
 # If micro editor exist
@@ -46,13 +45,13 @@ if type -q micro
 end
 
 # asdf
-if test -f (brew --prefix asdf)"/libexec/asdf.fish"
+if test -f "(brew --prefix asdf)/libexec/asdf.fish"
   source (brew --prefix asdf)/libexec/asdf.fish
 end
 
 # Jetbrains App
-if test -d $HOME"/.local/share/JetBrains/Toolbox/scripts"
-  set -gx PATH $HOME/.local/share/JetBrains/Toolbox/scripts $PATH
+if test -d "$HOME/.local/share/JetBrains/Toolbox/scripts"
+  set -gx PATH "$HOME/.local/share/JetBrains/Toolbox/scripts" $PATH
 end
 
 # PyENV
@@ -108,6 +107,10 @@ if type -q k3d
   k3d completion fish | source
 end
 
+if type -q kops
+  kops completion fish | source
+end
+
 # mcfly
 if type -q mcfly
   mcfly init fish | source
@@ -117,7 +120,22 @@ if type -q yq
   yq shell-completion fish | source
 end
 
-# set alias
-if test -f $HOME/.dotfiles/fish/alias.fish
-  source $HOME/.dotfiles/fish/alias.fish
+if type -q colima
+  colima completion fish | source
 end
+
+# MySQL-Client@5.7 By HomeBrew
+if test -d "$HOMEBREW_PREFIX/opt/mysql-client@5.7"
+  set -gx PATH $PATH $HOMEBREW_PREFIX/opt/mysql-client@5.7/bin
+end
+
+# MySQL-Client@8.0 By HomeBrew
+if test -d "$HOMEBREW_PREFIX/opt/mysql-client@8.0"
+  set -gx PATH $PATH $HOMEBREW_PREFIX/opt/mysql-client@8.0/bin
+end
+
+
+# set alias
+# if test -f $HOME/.dotfiles/fish/alias.fish
+#   source $HOME/.dotfiles/fish/alias.fish
+# end

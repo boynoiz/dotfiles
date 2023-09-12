@@ -1,21 +1,19 @@
 root = true
 
 [*]
+indent_size = 4
 indent_style = space
-indent_size = 2
-tab_width = 8
 end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
 insert_final_newline = true
-
-[*.md]
-trim_trailing_whitespace = false
-
-[*.{c,h,in,lua}]
 max_line_length = 100
 
-[*.py]
-indent_size = 4
-
-[{Makefile,**/Makefile,runtime/doc/*.txt}]
+[{Makefile,*.in}]
 indent_style = tab
-indent_size = 8
+
+[*.{md,rst}]
+trim_trailing_whitespace = false
+
+[*.{sh,fish}]
+indent_size = 2
