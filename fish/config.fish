@@ -134,6 +134,9 @@ if test -d "$HOMEBREW_PREFIX/opt/mysql-client@8.0"
   set -gx PATH $PATH $HOMEBREW_PREFIX/opt/mysql-client@8.0/bin
 end
 
+if type -q helm
+  helm completion fish | source
+end
 
 # set alias
 # if test -f $HOME/.dotfiles/fish/alias.fish
