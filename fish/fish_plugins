@@ -4,3 +4,4 @@ jhillyerd/plugin-git
 edc/bass
 lilyball/nix-env.fish
 kidonng/nix-completions.fish
+patrickf1/fzf.fish

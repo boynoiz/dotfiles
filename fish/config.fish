@@ -1,5 +1,5 @@
 #set PATH
-set PATH $HOME/bin $HOME/.local/bin /usr/local/bin /usr/share $PATH
+set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
 
 # Homebrew
 if type -q /home/linuxbrew/.linuxbrew/bin/brew
@@ -34,8 +34,10 @@ if string match -riq 'microsoft' $check_os
   set -gx GDK_SCALE 0
   set -gx GDK_BACKEND x11
   set -gx LIBGL_ALWAYS_INDIRECT 1
-  #set -gx WSL_HOST_IP (cmd.exe /C netsh interface ip show addresses "vEthernet (WSL)" | grep "IP Address" | sed -e "s/\sIP Address:\s//g; s/\r//")
-  set -gx DISPLAY 172.20.144.1:0.0
+  set -gx NO_AT_BRIDGE 1
+  set -gx WSL_HOST_IP (ip route show default | awk '{print $3}')
+  set -gx DISPLAY $WSL_HOST_IP:0.0
+  set -gx PULSE_SERVER tcp:$WSL_HOST_IP
 end
 
 # If micro editor exist
@@ -46,6 +48,7 @@ end
 
 # asdf
 if test -f "(brew --prefix asdf)/libexec/asdf.fish"
+  set -gx PATH $HOME/.asdf/shims $PATH
   source (brew --prefix asdf)/libexec/asdf.fish
 end
 
@@ -86,6 +89,17 @@ end
 if type -q thefuck
   thefuck --alias | source
 end
+
+# LDS
+if type -q lsd
+  alias ls='lsd' $argv
+end
+
+# Exa
+#if type -q exa
+#  alias ls='exa -lag --header'
+#end
+
 
 # Zoxide
 if type -q zoxide
@@ -134,8 +148,14 @@ if test -d "$HOMEBREW_PREFIX/opt/mysql-client@8.0"
   set -gx PATH $PATH $HOMEBREW_PREFIX/opt/mysql-client@8.0/bin
 end
 
+# Helm
 if type -q helm
   helm completion fish | source
+end
+
+# Kompose
+if type -q kompose
+  kompose completion fish | source
 end
 
 # set alias

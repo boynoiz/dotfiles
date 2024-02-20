@@ -1,11 +1,11 @@
 helm 3.11.1
-golang 1.19.6
+golang 1.21.7
 terraform 1.5.7
 nodejs 20.6.1
 linkerd 2.12.4
 rust 1.67.1
-python 3.11.4
-kubectl 1.23.16
+python 3.11.8
+kubectl 1.25.16
 kubectx 0.9.4
 teleport-community 9.3.26
 krew 0.4.3
@@ -17,3 +17,6 @@ zola 0.17.2
 shfmt lastest
 cilium-cli 0.15.4
 php 8.2.7
+java openjdk-11.0.2
+git-chglog 0.15.4
+argocd 2.9.5
