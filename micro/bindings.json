@@ -7,5 +7,6 @@
     "CtrlSpace": "command:lspcompletion",
     "CtrlUnderscore": "lua:comment.comment",
     "F1": "command:cheat",
+    "F3": "command: fexec gopls definition {f}:#{o}",
     "F6": "command-edit:gorename "
 }
