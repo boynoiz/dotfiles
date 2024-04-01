@@ -1,8 +1,13 @@
 #set PATH
 set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
 
-# Homebrew
+# Homebrew & asdf
 if type -q /home/linuxbrew/.linuxbrew/bin/brew
+  if test -f "(brew --prefix asdf)/libexec/asdf.fish"
+    set -gx PATH $HOME/.asdf/shims $PATH
+    source (brew --prefix asdf)/libexec/asdf.fish
+  end
+
   set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
   eval ($HOMEBREW_PREFIX/bin/brew shellenv)
   if test -d "$HOMEBREW_PREFIX/share/fish/completions"
@@ -11,11 +16,6 @@ if type -q /home/linuxbrew/.linuxbrew/bin/brew
   if test -d $HOMEBREW_PREFIX/share/fish/vendor_completions.d
     set -gx fish_complete_path $fish_complete_path $HOMEBREW_PREFIX/share/fish/vendor_completions.d
   end
-
-  #set -gx LD_LIBRARY_PATH /usr/lib (brew --prefix)/lib $LD_LIBRARY_PATH
-  #set -gx LDFLAGS "-L $HOMEBREW_PREFIX/opt/openssl@3/lib" $LDFLAGS
-  #set -gx CPPFLAGS "-I $HOMEBREW_PREFIX/opt/openssl@3/include" $CPPFLAGS
-  #set -gx PKG_CONFIG_PATH "$HOMEBREW_PREFIX/opt/openssl@3/lib/pkgconfig" $PKG_CONFIG_PATH
 end
 
 #encoding
@@ -40,16 +40,16 @@ if string match -riq 'microsoft' $check_os
   set -gx PULSE_SERVER tcp:$WSL_HOST_IP
 end
 
+# Starship
+if type -q starship
+  starship init fish | source
+end
+
+
 # If micro editor exist
 if type -q micro
  set -gx KUBE_EDITOR micro
  set -gx TALOS_EDITOR micro
-end
-
-# asdf
-if test -f "(brew --prefix asdf)/libexec/asdf.fish"
-  set -gx PATH $HOME/.asdf/shims $PATH
-  source (brew --prefix asdf)/libexec/asdf.fish
 end
 
 # Jetbrains App
@@ -80,11 +80,6 @@ if test -d "$HOME/.cargo/bin"
   set -gx PATH $PATH $HOME/.cargo/bin
 end
 
-# Starship
-if type -q starship
-  starship init fish | source
-end
-
 # The Fuck
 if type -q thefuck
   thefuck --alias | source
@@ -94,12 +89,6 @@ end
 if type -q lsd
   alias ls='lsd' $argv
 end
-
-# Exa
-#if type -q exa
-#  alias ls='exa -lag --header'
-#end
-
 
 # Zoxide
 if type -q zoxide
@@ -121,10 +110,6 @@ if type -q k3d
   k3d completion fish | source
 end
 
-if type -q kops
-  kops completion fish | source
-end
-
 # mcfly
 if type -q mcfly
   mcfly init fish | source
@@ -143,11 +128,6 @@ if test -d "$HOMEBREW_PREFIX/opt/mysql-client@5.7"
   set -gx PATH $PATH $HOMEBREW_PREFIX/opt/mysql-client@5.7/bin
 end
 
-# MySQL-Client@8.0 By HomeBrew
-if test -d "$HOMEBREW_PREFIX/opt/mysql-client@8.0"
-  set -gx PATH $PATH $HOMEBREW_PREFIX/opt/mysql-client@8.0/bin
-end
-
 # Helm
 if type -q helm
   helm completion fish | source
@@ -158,7 +138,7 @@ if type -q kompose
   kompose completion fish | source
 end
 
-# set alias
-# if test -f $HOME/.dotfiles/fish/alias.fish
-#   source $HOME/.dotfiles/fish/alias.fish
-# end
+# Go Entity Framework
+if type -q ent
+  ent completion fish | source
+end

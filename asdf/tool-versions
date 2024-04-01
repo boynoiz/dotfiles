@@ -20,3 +20,5 @@ php 8.2.7
 java openjdk-11.0.2
 git-chglog 0.15.4
 argocd 2.9.5
+talosctl 1.4.6
+etcd 3.5.12
