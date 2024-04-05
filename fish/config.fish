@@ -3,12 +3,13 @@ set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
 
 # Homebrew & asdf
 if type -q /home/linuxbrew/.linuxbrew/bin/brew
+	# if asdf exist, then register PATH to asdf first
   if test -f "(brew --prefix asdf)/libexec/asdf.fish"
     set -gx PATH $HOME/.asdf/shims $PATH
     source (brew --prefix asdf)/libexec/asdf.fish
   end
 
-  set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
+  set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew  
   eval ($HOMEBREW_PREFIX/bin/brew shellenv)
   if test -d "$HOMEBREW_PREFIX/share/fish/completions"
     set -gx fish_complete_path $fish_complete_path $HOMEBREW_PREFIX/share/fish/completions
