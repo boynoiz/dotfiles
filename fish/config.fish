@@ -41,6 +41,11 @@ if string match -riq 'microsoft' $check_os
   set -gx PULSE_SERVER tcp:$WSL_HOST_IP
 end
 
+# Zellij
+if status is-interactive
+	eval (zellij setup --generate-auto-start fish | string collect)
+end
+
 # Starship
 if type -q starship
   starship init fish | source
@@ -143,3 +148,6 @@ end
 if type -q ent
   ent completion fish | source
 end
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/pattp/.local/share/google-cloud-sdk/path.fish.inc' ]; . '/home/pattp/.local/share/google-cloud-sdk/path.fish.inc'; end
