@@ -1,7 +1,7 @@
 helm 3.11.1
-golang 1.21.7
+golang 1.22.2
 terraform 1.5.7
-nodejs 20.6.1
+nodejs 20.9.0
 linkerd 2.12.4
 rust 1.67.1
 python 3.11.8
@@ -13,12 +13,13 @@ shellcheck 0.9.0
 mkcert 1.4.4
 nerdctl 1.2.1
 terraformer 0.8.22
-zola 0.17.2
+zola 0.18.0
 shfmt lastest
 cilium-cli 0.15.4
-php 8.2.7
+php 8.3.7
 java openjdk-11.0.2
 git-chglog 0.15.4
 argocd 2.9.5
 talosctl 1.4.6
 etcd 3.5.12
+bun 1.1.3
