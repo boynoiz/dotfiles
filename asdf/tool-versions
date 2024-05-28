@@ -1,11 +1,11 @@
 helm 3.11.1
 golang 1.22.2
-terraform 1.5.7
+terraform 1.8.4
 nodejs 20.9.0
 linkerd 2.12.4
 rust 1.67.1
 python 3.11.8
-kubectl 1.25.16
+kubectl 1.27.14
 kubectx 0.9.4
 teleport-community 9.3.26
 krew 0.4.3

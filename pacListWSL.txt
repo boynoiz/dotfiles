@@ -1,3 +1,4 @@
+alacritty
 aria2
 asciidoc
 aspell
