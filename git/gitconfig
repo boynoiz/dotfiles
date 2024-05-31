@@ -47,6 +47,3 @@
 
 [includeIf "gitdir:~/Projects/**"]
   path=~/.dotfiles/git/personal-gitconfig
-
-[includeIf "gitdir:~/Sellsuki/**"]
-  path=~/.dotfiles/git/work-gitconfig
