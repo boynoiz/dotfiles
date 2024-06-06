@@ -42,5 +42,8 @@
 [includeIf "gitdir:~/.dotfiles/**"]
     path=~/.dotfiles/git/users/personal-gitconfig
 
-[includeIf "gitdir:~/.Projects/**"]
+[includeIf "gitdir:~/Projects/**"]
+    path=~/.dotfiles/git/users/personal-gitconfig
+
+[includeIf "gitdir:~/Conicle/**"]
     path=~/.dotfiles/git/users/personal-gitconfig
