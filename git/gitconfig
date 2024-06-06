@@ -41,3 +41,6 @@
 
 [includeIf "gitdir:~/.dotfiles/**"]
     path=~/.dotfiles/git/users/personal-gitconfig
+
+[includeIf "gitdir:~/.Projects/**"]
+    path=~/.dotfiles/git/users/personal-gitconfig
