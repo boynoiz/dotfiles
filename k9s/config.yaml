@@ -28,16 +28,3 @@ k9s:
     textWrap: false
     # Toggles log line timestamp info. Default false
     showTime: false
-
-  # Indicates the current Kube context. Defaults to current context
-  currentContext: k3d-home-lab
-  # Indicates the current kube cluster. Defaults to current context cluster
-  currentCluster: k3d-home-lab
-  # Persists per cluster preferences for favorite namespaces and view.
-
-  clusters:
-    k3d-home-lab:
-      featureGates:
-        nodeShell: true
-      shellPod:
-        image: killerAdmin

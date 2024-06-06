@@ -1,6 +1,8 @@
 .project
 .settings/**
 
+.idea
+
 # Compiled source
 *.o
 *.pyc

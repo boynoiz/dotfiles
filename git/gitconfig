@@ -6,6 +6,12 @@
   whitespace = fix
   excludesFile = '~/.gitignore'
 
+[user]
+  email = boynoiz@gmail.com
+  name = Pathompong Pechkongtong
+  signingkey = 8972B63FD8C235E4
+  useConfigOnly = true
+
 [include]
   path = ~/.dotfiles/git/config.d/aliases
 [include]
@@ -33,17 +39,8 @@
 [init]
   defaultBranch = main
 
-[user]
-  email = boynoiz@gmail.com
-  name = Pathompong Pechkongtong
-  signingkey = C2D8E878C6951581
-  useConfigOnly = true
-
 [gpg]
   program = "/usr/bin/gpg"
 
 [tag]
   gpgsign = true
-
-[includeIf "gitdir:~/Projects/**"]
-  path=~/.dotfiles/git/personal-gitconfig

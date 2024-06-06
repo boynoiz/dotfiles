@@ -9,7 +9,7 @@ if type -q /home/linuxbrew/.linuxbrew/bin/brew
     source (brew --prefix asdf)/libexec/asdf.fish
   end
 
-  set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew  
+  set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
   eval ($HOMEBREW_PREFIX/bin/brew shellenv)
   if test -d "$HOMEBREW_PREFIX/share/fish/completions"
     set -gx fish_complete_path $fish_complete_path $HOMEBREW_PREFIX/share/fish/completions
@@ -43,7 +43,9 @@ end
 
 # Zellij
 if status is-interactive
-	eval (zellij setup --generate-auto-start fish | string collect)
+  if type -q zellij
+	  eval (zellij setup --generate-auto-start fish | string collect)
+	end
 end
 
 # Starship

@@ -1,0 +1,48 @@
+working_directory = "/home/patt"
+import = ["/home/patt/.dotfiles/alacritty/keybindings.toml", "/home/patt/.dotfiles/alacritty/colors.toml"]
+live_config_reload = true
+
+
+[bell]
+animation = "EaseOutExpo"
+color = "0x000000"
+duration = 10
+
+[cursor]
+unfocused_hollow = true
+
+[cursor.style]
+blinking = "Always"
+shape = "Block"
+
+[font]
+size = 10
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[selection]
+save_to_clipboard = true
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+
+[shell]
+args = ["--login"]
+program = "/bin/fish"
+
+[window]
+decorations = "full"
+dynamic_padding = false
+startup_mode = "Windowed"
+
+[window.dimensions]
+columns = 0
+lines = 0
+
+[window.padding]
+x = 10
+y = 10
+
+[window.position]
+x = 0
+y = 0
