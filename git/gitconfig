@@ -45,5 +45,8 @@
 [includeIf "gitdir:~/Projects/**"]
     path=~/.dotfiles/git/users/personal-gitconfig
 
-[includeIf "gitdir:~/Conicle/**"]
-    path=~/.dotfiles/git/users/personal-gitconfig
+[includeIf "gitdir:~/Workspace/**"]
+    path=~/.dotfiles/git/users/workspace-gitconfig
+[user]
+	name = Pathompong Pechkongtong
+	email = boynoiz@gmail.com
