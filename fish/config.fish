@@ -3,7 +3,7 @@ set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
 
 # Homebrew & asdf
 if type -q /home/linuxbrew/.linuxbrew/bin/brew
-	# if asdf exist, then register PATH to asdf first
+	# if asdf exist, then register PATH to asdf first.
 	set -gx ASDF_SHIMS_PATH $HOME/.asdf/shims
 	set -gx ASDF_FISH_EXEC (brew --prefix asdf)/libexec/asdf.fish
     if test -f $ASDF_FISH_EXEC
