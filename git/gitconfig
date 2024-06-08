@@ -1,37 +1,37 @@
 [core]
-  autocrlf = input
-  editor = micro
-  filemode = false
-  trustctime = false
-  whitespace = fix
-  excludesFile = '~/.gitignore'
+    autocrlf = input
+    editor = micro
+    filemode = false
+    trustctime = false
+    whitespace = fix
+    excludesFile = '~/.gitignore'
 
 [include]
-  path = ~/.dotfiles/git/config.d/aliases
+    path = ~/.dotfiles/git/config.d/aliases
 [include]
-  path = ~/.dotfiles/git/config.d/delta
+    path = ~/.dotfiles/git/config.d/delta
 [include]
-  path = ~/.dotfiles/git/config.d/theme
+    path = ~/.dotfiles/git/config.d/theme
 [include]
-  path = ~/.dotfiles/git/config.d/lfs
+    path = ~/.dotfiles/git/config.d/lfs
 
 [push]
-  default = current
+    default = current
 
 [fetch]
-  prune = true
-  rebase = true
+    prune = true
+    rebase = true
 
 [pull]
-  default = current
-  prune = true
-  rebase = true
+    default = current
+    prune = true
+    rebase = true
 
 [commit]
-  gpgsign = true
+    gpgsign = true
 
 [init]
-  defaultBranch = main
+    defaultBranch = main
 
 [gpg]
     program = "/usr/bin/gpg"
@@ -47,6 +47,3 @@
 
 [includeIf "gitdir:~/Workspace/**"]
     path=~/.dotfiles/git/users/workspace-gitconfig
-[user]
-	name = Pathompong Pechkongtong
-	email = boynoiz@gmail.com

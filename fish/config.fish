@@ -4,9 +4,11 @@ set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
 # Homebrew & asdf
 if type -q /home/linuxbrew/.linuxbrew/bin/brew
 	# if asdf exist, then register PATH to asdf first
-  if test -f "(brew --prefix asdf)/libexec/asdf.fish"
-    set -gx PATH $HOME/.asdf/shims $PATH
-    source (brew --prefix asdf)/libexec/asdf.fish
+	set -gx ASDF_SHIMS_PATH $HOME/.asdf/shims
+	set -gx ASDF_FISH_EXEC "(brew --prefix asdf)/libexec/asdf.fish"
+  if test -f $ASDF_FISH_EXEC
+    set -gx PATH $ASDF_SHIMS_PATH $PATH
+    source $ASDF_FISH_EXEC
   end
 
   set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
@@ -113,6 +115,11 @@ end
 if test -d "$HOME/.tmux/plugins/"
   set -gx TMUX_PLUGIN_MANAGER_PATH "$HOME/.tmux/plugins/"
 end
+
+if type -q k9s
+  set -gx K9SCONFIG $HOME/.config/k9s/
+end
+
 
 # k3d
 if type -q k3d
