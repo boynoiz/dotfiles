@@ -15,6 +15,12 @@
 [include]
     path = ~/.dotfiles/git/config.d/lfs
 
+[include]
+    path=~/.dotfiles/git/users/personal-gitconfig
+
+[includeIf "gitdir:~/Workspace/**"]
+    path=~/.dotfiles/git/users/workspace-gitconfig
+
 [push]
     default = current
 
@@ -38,12 +44,3 @@
 
 [tag]
     gpgsign = true
-
-[includeIf "gitdir:~/.dotfiles/**"]
-    path=~/.dotfiles/git/users/personal-gitconfig
-
-[includeIf "gitdir:~/Projects/**"]
-    path=~/.dotfiles/git/users/personal-gitconfig
-
-[includeIf "gitdir:~/Workspace/**"]
-    path=~/.dotfiles/git/users/workspace-gitconfig
