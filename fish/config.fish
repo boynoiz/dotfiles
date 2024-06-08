@@ -5,11 +5,11 @@ set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
 if type -q /home/linuxbrew/.linuxbrew/bin/brew
 	# if asdf exist, then register PATH to asdf first
 	set -gx ASDF_SHIMS_PATH $HOME/.asdf/shims
-	set -gx ASDF_FISH_EXEC "(brew --prefix asdf)/libexec/asdf.fish"
-  if test -f $ASDF_FISH_EXEC
-    set -gx PATH $ASDF_SHIMS_PATH $PATH
-    source $ASDF_FISH_EXEC
-  end
+	set -gx ASDF_FISH_EXEC (brew --prefix asdf)/libexec/asdf.fish
+    if test -f $ASDF_FISH_EXEC
+        set -gx PATH $ASDF_SHIMS_PATH $PATH
+        source $ASDF_FISH_EXEC
+    end
 
   set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
   eval ($HOMEBREW_PREFIX/bin/brew shellenv)
