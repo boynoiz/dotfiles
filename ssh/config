@@ -12,3 +12,5 @@ Host *
 	IgnoreUnknown UseKeychain
 	UseKeychain yes
 	AddKeysToAgent yes
+
+Include ~/.dotfiles/ssh/workspace_config

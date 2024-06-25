@@ -15,7 +15,10 @@
 [include]
     path = ~/.dotfiles/git/config.d/lfs
 
-[include]
+[includeIf "gitdir:~/.dotfiles/**"]
+    path=~/.dotfiles/git/users/personal-gitconfig
+
+[includeIf "gitdir:~/Projects/**"]
     path=~/.dotfiles/git/users/personal-gitconfig
 
 [includeIf "gitdir:~/Workspace/**"]
