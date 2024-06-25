@@ -1,5 +1,5 @@
 helm 3.11.1
-golang 1.22.2
+golang 1.22.4
 terraform 1.8.4
 nodejs 20.9.0
 linkerd 2.12.4

@@ -16,13 +16,22 @@
     path = ~/.dotfiles/git/config.d/lfs
 
 [includeIf "gitdir:~/.dotfiles/**"]
-    path=~/.dotfiles/git/users/personal-gitconfig
+    path=~/.dotfiles/git/users/personal-at-home-gitconfig
+
+[includeIf "gitdir:~/.dotfiles/**"]
+    path=~/.dotfiles/git/users/personal-t14-gitconfig
 
 [includeIf "gitdir:~/Projects/**"]
-    path=~/.dotfiles/git/users/personal-gitconfig
+    path=~/.dotfiles/git/users/personal-at-home-gitconfig
+
+[includeIf "gitdir:~/Projects/**"]
+    path=~/.dotfiles/git/users/personal-t14-gitconfig
 
 [includeIf "gitdir:~/Workspace/**"]
-    path=~/.dotfiles/git/users/workspace-gitconfig
+    path=~/.dotfiles/git/users/workspace-at-home-gitconfig
+
+[includeIf "gitdir:~/Workspace/**"]
+    path=~/.dotfiles/git/users/workspace-t14-gitconfig
 
 [push]
     default = current
