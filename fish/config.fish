@@ -79,12 +79,13 @@ if test -d "$HOME/.krew"
 end
 
 # Golang
-if type -q go
-  set -gx GOPATH (go env GOPATH)
-  set -gx GOROOT (go env GOROOT)
-  set -gx GOBIN (go env GOBIN)
-  set -gx PATH $PATH $GOPATH/bin $GOROOT/bin $GOBIN
-end
+# No need anymore as asdf will switch go env itself
+# if type -q go
+#   set -gx GOPATH (go env GOPATH)
+#   set -gx GOROOT (go env GOROOT)
+#   set -gx GOBIN (go env GOBIN)
+#   set -gx PATH $PATH $GOPATH/bin $GOROOT/bin $GOBIN
+# end
 
 # Rust
 if test -d "$HOME/.cargo/bin"
