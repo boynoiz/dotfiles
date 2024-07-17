@@ -5,7 +5,7 @@ set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
 if type -q /home/linuxbrew/.linuxbrew/bin/brew
 	# if asdf exist, then register PATH to asdf first.
 	set -gx ASDF_SHIMS_PATH $HOME/.asdf/shims
-	set -gx ASDF_FISH_EXEC "(brew --prefix asdf)"/libexec/asdf.fish
+	set -gx ASDF_FISH_EXEC (/home/linuxbrew/.linuxbrew/bin/brew --prefix asdf)/libexec/asdf.fish
     if test -f $ASDF_FISH_EXEC
         set -gx PATH $ASDF_SHIMS_PATH $PATH
         source $ASDF_FISH_EXEC
@@ -44,11 +44,11 @@ if string match -riq 'microsoft' $check_os
 end
 
 # Zellij
-if status is-interactive
-  if type -q zellij
-	  eval (zellij setup --generate-auto-start fish | string collect)
-	end
-end
+# if status is-interactive
+#   if type -q zellij
+# 	  eval (zellij setup --generate-auto-start fish | string collect)
+# 	end
+# end
 
 # Starship
 if type -q starship
@@ -69,7 +69,7 @@ if test -d "$HOME/.local/share/JetBrains/Toolbox/scripts"
 end
 
 # PyENV
-if type -q python
+if type -q python and type -q aria2c
   set -gx PYTHON_BUILD_ARIA2_OPTS "-x 10 -k 1M"
 end
 
@@ -121,7 +121,6 @@ if type -q k9s
   set -gx K9SCONFIG $HOME/.config/k9s/
 end
 
-
 # k3d
 if type -q k3d
   k3d completion fish | source
@@ -159,6 +158,3 @@ end
 if type -q ent
   ent completion fish | source
 end
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/pattp/.local/share/google-cloud-sdk/path.fish.inc' ]; . '/home/pattp/.local/share/google-cloud-sdk/path.fish.inc'; end

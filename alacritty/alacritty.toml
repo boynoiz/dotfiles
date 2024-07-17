@@ -97,7 +97,7 @@ multiplier = 3  # Default: 3
 [font]
 
 # Normal font style
-normal = { family = "CaskaydiaMono Nerd Font Mono", style = "Regular" }  # Default for Linux/BSD: "monospace", Regular
+normal = { family = "CaskaydiaCove Nerd Font Mono", style = "Regular" }  # Default for Linux/BSD: "monospace", Regular
 
 # Bold font style
 bold = { style = "Bold" }  # Inherits family from normal, Default style: Bold
@@ -109,7 +109,7 @@ italic = { style = "Italic" }  # Inherits family from normal, Default style: Ita
 bold_italic = { style = "Bold Italic" }  # Inherits family from normal, Default style: Bold Italic
 
 # Font size in points
-size = 12  # Default: 11.25
+size = 10  # Default: 11.25
 
 # Offset is extra space around each character
 offset = { x = 0, y = 0 }  # Default: x = 0, y = 0
