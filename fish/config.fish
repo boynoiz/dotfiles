@@ -43,6 +43,10 @@ if string match -riq 'microsoft' $check_os
   set -gx PULSE_SERVER tcp:$WSL_HOST_IP
 end
 
+# Start SSH Agent
+# https://github.com/ivakyb/fish_ssh_agent
+fish_ssh_agent
+
 # Zellij
 # if status is-interactive
 #   if type -q zellij
