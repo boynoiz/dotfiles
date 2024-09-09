@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
 
 # Function to print usage
 print_usage() {
-    echo "Usage: $0 <cluster_name> <namespace> <chart_directory> <values_file>"
-    echo "Example: $0 my-cluster harbor ./harbor-chart values-infras.yaml"
+    echo "Usage: $0 <cluster_name> <namespace> <release_name> <chart_directory> <values_file>"
+    echo "Example: $0 my-cluster harbor harbor ./harbor-chart values-infras.yaml"
 }
 
 # Function to check if a command is available
@@ -16,8 +16,17 @@ check_command() {
     fi
 }
 
+# Function to clean up temporary files
+cleanup() {
+    rm -f resource_* local_manifest_raw.yaml cluster_manifest_raw.yaml local_manifest_sorted.yaml cluster_manifest_sorted.yaml
+    rm -rf sorted
+}
+
+# Set up trap to ensure cleanup on exit
+trap cleanup EXIT
+
 # Check if required arguments are provided
-if [ "$#" -ne 4 ]; then
+if [ "$#" -ne 5 ]; then
     print_usage
     exit 1
 fi
@@ -30,30 +39,63 @@ check_command "diff"
 
 CLUSTER="$1"
 NAMESPACE="$2"
-CHART_DIR="$3"
-VALUES_FILE="$4"
+RELEASE_NAME="$3"
+CHART_DIR="$4"
+VALUES_FILE="$5"
 KUBE_VERSION="1.28"
 
-# Function to sort and clean YAML
-sort_and_clean_yaml() {
-    yq eval 'sort_keys(..)' - | sed '/^[[:space:]]*$/d' | sed 's/[[:space:]]*$//'
+# Function to process and sort YAML resources
+process_and_sort_yaml() {
+    local input_file="$1"
+    local output_file="$2"
+    local is_helm_output="$3"
+
+    # Split the input file into individual resource files
+    csplit -s -f resource_ "$input_file" '/^---$/' '{*}' || true
+
+    # Process each resource file
+    for file in resource_*; do
+        [ -f "$file" ] || continue  # Skip if file doesn't exist
+
+        # Extract kind and name
+        kind=$(yq e '.kind' "$file") || continue
+        name=$(yq e '.metadata.name' "$file") || continue
+
+        # Create a sorted version of the resource
+        mkdir -p "sorted/${kind}"
+
+        # Add separator and source comment
+        {
+            echo "---"
+            if [ "$is_helm_output" = true ]; then
+                grep '^# Source:' "$file" | head -n 1 || echo "# Source: Unknown"
+            else
+                echo "# Source: ${kind}/${name}"
+            fi
+            yq e 'sort_keys(..)' "$file"
+        } > "sorted/${kind}/${name}.yaml"
+    done
+
+    # Combine sorted resources into a single file
+    find sorted -type f -name "*.yaml" | sort | xargs cat > "$output_file"
 }
 
 # Generate local manifest
 echo "Generating local manifest..."
-helm template -n "$NAMESPACE" "$NAMESPACE" "$CHART_DIR" -f "$VALUES_FILE" --api-versions ${KUBE_VERSION} | sort_and_clean_yaml > local_manifest.yaml
+helm template -n "${NAMESPACE}" "${RELEASE_NAME}" "${CHART_DIR}" -f "${VALUES_FILE}" --api-versions "${KUBE_VERSION}" > local_manifest_raw.yaml
 
 # Generate cluster manifest
 echo "Generating cluster manifest..."
-kubectl --context="$CLUSTER" --namespace="$NAMESPACE" get -o=yaml \
-    pvc,configmap,serviceaccount,secret,ingress,service,deployment,statefulset,hpa,job,cronjob | \
-    sort_and_clean_yaml > cluster_manifest.yaml
+kubectl --context="${CLUSTER}" --namespace="${NAMESPACE}" get -o=yaml \
+    pvc,configmap,serviceaccount,secret,ingress,service,deployment,statefulset,hpa,job,cronjob > cluster_manifest_raw.yaml
+
+# Process and sort manifests
+echo "Processing and sorting manifests..."
+process_and_sort_yaml "local_manifest_raw.yaml" "local_manifest_sorted.yaml" true
+process_and_sort_yaml "cluster_manifest_raw.yaml" "cluster_manifest_sorted.yaml" false
 
 # Compare manifests
 echo "Comparing manifests..."
-diff -u --color=always cluster_manifest.yaml local_manifest.yaml | less -R
-
-# Clean up
-rm local_manifest.yaml cluster_manifest.yaml
+diff -y --color=always local_manifest_sorted.yaml cluster_manifest_sorted.yaml | less -RS
 
 echo "Comparison complete."
