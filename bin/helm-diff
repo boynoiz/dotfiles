@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Function to print usage
+print_usage() {
+    echo "Usage: $0 <cluster_name> <namespace> <chart_directory> <values_file>"
+    echo "Example: $0 my-cluster harbor ./harbor-chart values-infras.yaml"
+}
+
+# Function to check if a command is available
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        echo "Error: $1 is not installed or not in PATH. Please install it and try again."
+        exit 1
+    fi
+}
+
+# Check if required arguments are provided
+if [ "$#" -ne 4 ]; then
+    print_usage
+    exit 1
+fi
+
+# Check for required commands
+check_command "kubectl"
+check_command "helm"
+check_command "yq"
+check_command "diff"
+
+CLUSTER="$1"
+NAMESPACE="$2"
+CHART_DIR="$3"
+VALUES_FILE="$4"
+KUBE_VERSION="1.28"
+
+# Function to sort and clean YAML
+sort_and_clean_yaml() {
+    yq eval 'sort_keys(..)' - | sed '/^[[:space:]]*$/d' | sed 's/[[:space:]]*$//'
+}
+
+# Generate local manifest
+echo "Generating local manifest..."
+helm template -n "$NAMESPACE" "$NAMESPACE" "$CHART_DIR" -f "$VALUES_FILE" --api-versions ${KUBE_VERSION} | sort_and_clean_yaml > local_manifest.yaml
+
+# Generate cluster manifest
+echo "Generating cluster manifest..."
+kubectl --context="$CLUSTER" --namespace="$NAMESPACE" get -o=yaml \
+    pvc,configmap,serviceaccount,secret,ingress,service,deployment,statefulset,hpa,job,cronjob | \
+    sort_and_clean_yaml > cluster_manifest.yaml
+
+# Compare manifests
+echo "Comparing manifests..."
+diff -u --color=always cluster_manifest.yaml local_manifest.yaml | less -R
+
+# Clean up
+rm local_manifest.yaml cluster_manifest.yaml
+
+echo "Comparison complete."
