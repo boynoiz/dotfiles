@@ -20,5 +20,59 @@ plugins:
     background: false
     args:
       - c
-      - >
-        kubectl node-shell --context $CONTEXT $NAME
+      - "kubectl node-shell --context $CONTEXT $NAME"
+  duplicate-pod:
+    shortCut: Ctrl-T
+    description: Duplicate Pod
+    scopes:
+      - po
+    command: kubectl
+    background: true
+    args:
+      - duplicate
+      - pod
+      - $NAME
+      - -n
+      - $NAMESPACE
+      - --context
+      - $CONTEXT
+  duplicate-deployment:
+    shortCut: Ctrl-T
+    description: Duplicate Deployment
+    scopes:
+      - deploy
+    command: kubectl
+    background: true
+    args:
+      - duplicate
+      - deploy
+      - $NAME
+      - -n
+      - $NAMESPACE
+      - --context
+      - $CONTEXT
+  duplicate-statefulset:
+    shortCut: Ctrl-T
+    description: Duplicate StatefulSet
+    scopes:
+      - statefulset
+    command: kubectl
+    background: true
+    args:
+      - duplicate
+      - statefulset
+      - $NAME
+      - -n
+      - $NAMESPACE
+      - --context
+      - $CONTEXT
+  dive:
+    shortCut: d
+    confirm: false
+    description: "Dive image"
+    scopes:
+      - containers
+    command: dive
+    background: false
+    args:
+      - $COL-IMAGE

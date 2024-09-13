@@ -1,5 +1,6 @@
 #set PATH
 set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
+set -gx XDG_CONFIG_HOME $HOME/.config
 
 # Homebrew & asdf
 if type -q /home/linuxbrew/.linuxbrew/bin/brew
@@ -37,7 +38,7 @@ if string match -riq 'microsoft' $check_os
   set -gx GDK_SCALE 0
   set -gx GDK_BACKEND x11
   set -gx LIBGL_ALWAYS_INDIRECT 1
-  set -gx NO_AT_BRIDGE 1
+  #set -gx NO_AT_BRIDGE 1
   set -gx WSL_HOST_IP (ip route show default | awk '{print $3}')
   set -gx DISPLAY $WSL_HOST_IP:0.0
   set -gx PULSE_SERVER tcp:$WSL_HOST_IP
@@ -53,6 +54,11 @@ fish_ssh_agent
 # 	  eval (zellij setup --generate-auto-start fish | string collect)
 # 	end
 # end
+
+# Default Browser
+if type -q google-chrome-beta
+  set -gx BROWSER /usr/sbin/google-chrome-beta
+end
 
 # Starship
 if type -q starship
