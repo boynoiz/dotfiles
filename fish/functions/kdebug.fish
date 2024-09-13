@@ -18,22 +18,24 @@ function kdebug
         set target_arg "--target $_flag_target"
     end
 
-    if test (count $argv) -eq 0
-        echo "Usage: kdebug [options] <debug-pod-name>"
+    if test (count $argv) -gt 0
+        echo "Usage: kdebug [options]"
         echo "Options:"
         echo "  -c/--context <context>    Specify the kubectl context (default: current context)"
         echo "  -n/--namespace <namespace> Specify the namespace (default: current namespace)"
         echo "  -t/--target <container>   Specify the target container to debug"
         echo ""
         echo "Example:"
-        echo "  kdebug -c staging -n site_a -t app_container my-debug-pod"
+        echo "  kdebug -c staging -n site_a -t app_container"
         echo ""
-        echo "This will create a debug pod named 'my-debug-pod' in the 'site_a' namespace"
+        echo "This will create a debug pod with an auto-generated name in the 'site_a' namespace"
         echo "of the 'staging' context, targeting the 'app_container' container."
+        echo "The debug pod will be automatically removed after exit."
         return 1
     end
 
-    set -l debug_pod_name $argv[1]
+    set -l random_suffix (tr -dc A-Za-z0-9 </dev/urandom | head -c 13)
+    set -l debug_pod_name "netshoot-$random_suffix"
 
-    eval kubectl $context_arg $namespace_arg debug -it --image=nicolaka/netshoot $target_arg $debug_pod_name
+    eval kubectl $context_arg $namespace_arg debug -it --rm --image=nicolaka/netshoot $target_arg $debug_pod_name
 end
