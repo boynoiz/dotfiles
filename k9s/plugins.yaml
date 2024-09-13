@@ -4,21 +4,16 @@ plugins:
     confirm: false
     description: "Debug with netshoot"
     scopes:
-      - pod
+      - containers
     command: bash
     background: false
     args:
       - -c
-      - >
-        kubectl debug -it --rm
-        --image=nicolaka/netshoot
-        --context $CONTEXT
-        -n $NAMESPACE $NAME --target $COL-READY --
-        /bin/bash
+      - "kubectl debug -it --context $CONTEXT -n=$NAMESPACE $POD --target=$NAME --image=nicolaka/netshoot --share-processes -- bash"
   node-shell:
     shortCut: Ctrl-N
     confirm: false
-    description: "Nodeshell"
+    description: "Node-shell"
     scopes:
       - node
     command: bash
