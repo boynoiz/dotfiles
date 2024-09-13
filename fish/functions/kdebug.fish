@@ -19,15 +19,21 @@ function kdebug
     end
 
     if test (count $argv) -eq 0
-        echo "Usage: kdebug [options] <pod-name>"
+        echo "Usage: kdebug [options] <debug-pod-name>"
         echo "Options:"
-        echo "  -c/--context <context>    Specify the kubectl context"
-        echo "  -n/--namespace <namespace> Specify the namespace"
-        echo "  -t/--target <container>   Specify the target container"
+        echo "  -c/--context <context>    Specify the kubectl context (default: current context)"
+        echo "  -n/--namespace <namespace> Specify the namespace (default: current namespace)"
+        echo "  -t/--target <container>   Specify the target container to debug"
+        echo ""
+        echo "Example:"
+        echo "  kdebug -c staging -n site_a -t app_container my-debug-pod"
+        echo ""
+        echo "This will create a debug pod named 'my-debug-pod' in the 'site_a' namespace"
+        echo "of the 'staging' context, targeting the 'app_container' container."
         return 1
     end
 
-    set -l pod_name $argv[1]
+    set -l debug_pod_name $argv[1]
 
-    eval kubectl $context_arg $namespace_arg debug -it --image=nicolaka/netshoot $target_arg $pod_name
+    eval kubectl $context_arg $namespace_arg debug -it --image=nicolaka/netshoot $target_arg $debug_pod_name
 end
