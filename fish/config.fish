@@ -2,24 +2,38 @@
 set -gx PATH $HOME/.local/bin /usr/local/bin /usr/share $PATH
 set -gx XDG_CONFIG_HOME $HOME/.config
 
-# Homebrew & asdf
-if type -q /home/linuxbrew/.linuxbrew/bin/brew
-	# if asdf exist, then register PATH to asdf first.
-	set -gx ASDF_SHIMS_PATH $HOME/.asdf/shims
-	set -gx ASDF_FISH_EXEC (/home/linuxbrew/.linuxbrew/bin/brew --prefix asdf)/libexec/asdf.fish
-    if test -f $ASDF_FISH_EXEC
-        set -gx PATH $ASDF_SHIMS_PATH $PATH
-        source $ASDF_FISH_EXEC
-    end
+# ASDF
+set -l asdf_path $HOME/.asdf
 
-  set -gx HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
-  eval ($HOMEBREW_PREFIX/bin/brew shellenv)
-  if test -d "$HOMEBREW_PREFIX/share/fish/completions"
-    set -gx fish_complete_path $fish_complete_path $HOMEBREW_PREFIX/share/fish/completions
-  end
-  if test -d $HOMEBREW_PREFIX/share/fish/vendor_completions.d
-    set -gx fish_complete_path $fish_complete_path $HOMEBREW_PREFIX/share/fish/vendor_completions.d
-  end
+if test -f $asdf_path/asdf.fish
+    source $asdf_path/asdf.fish
+
+    if test -d $asdf_path/shims
+        fish_add_path $asdf_path/shims
+    end
+end
+
+# Homebrew
+set -l brew_path /home/linuxbrew/.linuxbrew/bin/brew
+
+if test -x $brew_path
+    eval ($brew_path shellenv)
+
+    set -l brew_prefix (brew --prefix)
+    set -l completion_paths \
+        $brew_prefix/share/fish/completions \
+        $brew_prefix/share/fish/vendor_completions.d
+
+    for path in $completion_paths
+        if test -d $path
+            fish_add_path --path $fish_complete_path $path
+        end
+    end
+end
+
+# Ensure asdf shims take precedence
+if test -d $asdf_path/shims
+    fish_add_path --move --prepend $asdf_path/shims
 end
 
 #encoding
