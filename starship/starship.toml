@@ -618,7 +618,7 @@ contexts = []
 [kubernetes.user_aliases]
 
 [line_break]
-disabled = false
+disabled = true
 
 [localip]
 ssh_only = true

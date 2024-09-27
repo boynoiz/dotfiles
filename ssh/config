@@ -14,3 +14,10 @@ Host *
 	AddKeysToAgent yes
 
 Include ~/.dotfiles/ssh/workspace_config
+
+
+Host	monitor
+			HostName 157.230.241.80
+			User conicle
+			Port 22
+      ForwardAgent yes
