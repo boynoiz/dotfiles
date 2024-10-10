@@ -1,6 +1,6 @@
 #!/usr/bin/env fish
 
 yay -Syyu
-sudo pacman -Qqe | tee ~/.dotfiles/pacListWSL.txt
+sudo pacman -Qqe | tee ~/.dotfiles/pacList.txt
 brew update && brew upgrade && brew autoremove && brew cleanup
 brew bundle dump --global --force --file=~/.dotfiles/Brewfile
