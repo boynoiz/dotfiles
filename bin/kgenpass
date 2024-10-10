@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+# kgenpass - Kubernetes Secret Generator
+#
+# Usage: kgenpass --context=<context> --namespace=<namespace> [--length=<length>] <secret_name>
+#
+# Setup:
+# 1. Save this script as 'kgenpass' in a directory of your choice.
+# 2. Make it executable: chmod +x kgenpass
+# 3. Create a symlink in ~/.local/bin/: ln -s /path/to/kgenpass ~/.local/bin/kgenpass
+# 4. Ensure ~/.local/bin is in your PATH
+
+# Check if required commands are available
+command -v kubectl >/dev/null 2>&1 || { echo >&2 "kubectl is required but not installed. Aborting."; exit 1; }
+
+# Default values
+context=""
+namespace=""
+length=16
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --context=*)
+            context="${1#*=}"
+            shift
+            ;;
+        --namespace=*)
+            namespace="${1#*=}"
+            shift
+            ;;
+        --length=*)
+            length="${1#*=}"
+            shift
+            ;;
+        *)
+            secret_name="$1"
+            shift
+            ;;
+    esac
+done
+
+# Check if required arguments are provided
+if [[ -z "$secret_name" || -z "$context" || -z "$namespace" ]]; then
+    echo "Usage: kgenpass --context=<context> --namespace=<namespace> [--length=<length>] <secret_name>"
+    exit 1
+fi
+
+# Ensure minimum length for password
+if [[ $length -lt 4 ]]; then
+    length=4
+fi
+
+# Generate random password
+generate_password() {
+    local l=$1
+    local chars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*'
+    tr -dc "$chars" < /dev/urandom | head -c $((l-2))
+}
+
+# Generate password and ensure it contains at least 2 special characters
+while true; do
+    password=$(generate_password "$length")
+    special_chars=$(echo "$password" | tr -dc '!@#$%^&*' | wc -c)
+    if [[ $special_chars -ge 2 ]]; then
+        break
+    fi
+done
+
+# Add 2 more special characters to ensure we have at least 2
+password="${password}$(echo '!@#$%^&*' | fold -w1 | shuf | head -n2 | tr -d '\n')"
+
+# Shuffle the password
+password=$(echo "$password" | fold -w1 | shuf | tr -d '\n')
+
+# Create Kubernetes secret
+kubectl --context="$context" -n "$namespace" create secret generic "$secret_name" --from-literal=password="$password"
+
+# Print the generated password
+echo "Secret '$secret_name' created in namespace '$namespace' with a $length-character password."
+echo "Generated password: $password"
